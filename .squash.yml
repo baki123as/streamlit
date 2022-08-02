@@ -1,0 +1,31 @@
+deployments:
+  DatabaseService:
+    dockerimage:
+      ubuntu:16.04
+    build_steps:
+      - DEBIAN_FRONTEND=noninteractive apt-get update
+      - DEBIAN_FRONTEND=noninteractive apt-get install -y 
+      software-properties-common
+      - DEBIAN_FRONTEND=noninteractive apt-get install -y 
+        locales gcc postgresql postgresql-contrib 
+        sudo supervisor
+    launch_steps:
+      - service postgresql start
+      # Squash will ping/telnet this port number as a
+      # way to ensure the service is up and running
+    check_service_ports: 5432
+    port_forwarding: 5432:5432
+  InventoryApp:
+    dockerimage: ubuntu:16.04
+    build_steps:
+      - apt-get update && apt-get install -y libssl-dev \
+        libpq-dev git \
+        python python-dev python-pip python-virtualenv
+      - pip install setuptools pip
+      - pip install ~/code
+    launch_steps:
+      - cd ~/code/mysite
+      - python manage.py runserver 0.0.0.0:80
+    depends_on:
+      - DATABASE_SERVICE:
+          app: myrepo/master:DatabaseService
